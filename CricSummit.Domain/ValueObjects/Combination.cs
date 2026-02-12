@@ -2,9 +2,9 @@ namespace CricSummit.Domain.ValueObjects
 {
     public enum Combination
     {
-        Perfect,
-        Good,
+        Poor,
         Average,
-        Poor
+        Good,
+        Perfect,
     }
 }

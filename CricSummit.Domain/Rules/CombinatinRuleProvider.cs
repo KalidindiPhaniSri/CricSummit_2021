@@ -3,11 +3,19 @@ using Microsoft.Extensions.Logging;
 
 namespace CricSummit.Domain.Rules
 {
-    public class CombinationRuleProvider
+    public class CombinationRuleProvider : ICombinationRuleProvider
     {
         private readonly Dictionary<BowlingType, Dictionary<BattingType, Combination>> _rules =
         [
             ];
+        public IReadOnlyDictionary<
+            BowlingType,
+            IReadOnlyDictionary<BattingType, Combination>
+        > CombinationRules =>
+            _rules.ToDictionary(
+                x => x.Key,
+                x => (IReadOnlyDictionary<BattingType, Combination>)x.Value
+            );
         private readonly ILogger<CombinationRuleProvider> _logger;
 
         public CombinationRuleProvider(ILogger<CombinationRuleProvider> logger)

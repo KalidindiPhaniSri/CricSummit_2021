@@ -2,9 +2,9 @@ namespace CricSummit.Domain.ValueObjects
 {
     public enum ShotTiming
     {
-        Perfect,
-        Good,
+        Late,
         Early,
-        Late
+        Good,
+        Perfect
     }
 }
