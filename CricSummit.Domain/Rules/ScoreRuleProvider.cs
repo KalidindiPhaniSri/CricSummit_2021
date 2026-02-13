@@ -26,7 +26,7 @@ namespace CricSummit.Domain.Rules
         {
             _rules[ShotTiming.Late] = new Dictionary<Combination, Score>
             {
-                { Combination.Poor, Score.Wicket },
+                { Combination.Poor, Score.Zero },
                 { Combination.Average, Score.One },
                 { Combination.Good, Score.Two },
                 { Combination.Perfect, Score.Three },
