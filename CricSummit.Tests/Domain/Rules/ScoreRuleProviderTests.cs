@@ -2,39 +2,39 @@ using CricSummit.Domain.Rules;
 using CricSummit.Domain.ValueObjects;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace CricSummit.Tests.Domain.Services
+namespace CricSummit.Tests.Domain.Rules
 {
     public class ScoreRuleProviderTestss
     {
-        IScoreRuleProvider scoreRuleProvider = new ScoreRuleProvider(
+        private readonly IScoreRuleProvider _scoreRuleProvider = new ScoreRuleProvider(
             NullLogger<ScoreRuleProvider>.Instance
         );
 
         [Fact]
         public void GetScore_WhenLateTimingPoorCombination_ReturnsWicket()
         {
-            Score score = scoreRuleProvider.GetScore(ShotTiming.Late, Combination.Poor);
+            Score score = _scoreRuleProvider.GetScore(ShotTiming.Late, Combination.Poor);
             Assert.Equal(Score.Wicket, score);
         }
 
         [Fact]
         public void GetScore_WhenEarlyTimingAverageCombination_ReturnsTwo()
         {
-            Score score = scoreRuleProvider.GetScore(ShotTiming.Early, Combination.Average);
+            Score score = _scoreRuleProvider.GetScore(ShotTiming.Early, Combination.Average);
             Assert.Equal(Score.Two, score);
         }
 
         [Fact]
         public void GetScore_WhenGoodTimingGoodCombination_ReturnsFour()
         {
-            Score score = scoreRuleProvider.GetScore(ShotTiming.Good, Combination.Good);
+            Score score = _scoreRuleProvider.GetScore(ShotTiming.Good, Combination.Good);
             Assert.Equal(Score.Four, score);
         }
 
         [Fact]
         public void GetScore_WhenPerfectTimingPerfectCombination_ReturnsSix()
         {
-            Score score = scoreRuleProvider.GetScore(ShotTiming.Perfect, Combination.Perfect);
+            Score score = _scoreRuleProvider.GetScore(ShotTiming.Perfect, Combination.Perfect);
             Assert.Equal(Score.Six, score);
         }
 
@@ -42,7 +42,7 @@ namespace CricSummit.Tests.Domain.Services
         public void GetScore_WhenIncorrectTimingCombination_ThrowsError()
         {
             Assert.Throws<InvalidDataException>(
-                () => scoreRuleProvider.GetScore((ShotTiming)99, (Combination)99)
+                () => _scoreRuleProvider.GetScore((ShotTiming)99, (Combination)99)
             );
         }
 
@@ -52,7 +52,7 @@ namespace CricSummit.Tests.Domain.Services
             int shotTimingCount = Enum.GetValues(typeof(ShotTiming)).Length;
             int combinationCount = Enum.GetValues(typeof(Combination)).Length;
             int scoreCount = 0;
-            foreach (var shotTimingObj in scoreRuleProvider.ScoreRules)
+            foreach (var shotTimingObj in _scoreRuleProvider.ScoreRules)
             {
                 scoreCount += shotTimingObj.Value.Count;
             }

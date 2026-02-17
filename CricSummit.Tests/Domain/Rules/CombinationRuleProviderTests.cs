@@ -2,17 +2,17 @@ using CricSummit.Domain.Rules;
 using CricSummit.Domain.ValueObjects;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace CricSummit.Tests.Domain.Services
+namespace CricSummit.Tests.Domain.Rules
 {
     public class CombinationRuleProviderTests
     {
-        private readonly ICombinationRuleProvider combinationRuleProvider =
+        private readonly ICombinationRuleProvider _combinationRuleProvider =
             new CombinationRuleProvider(NullLogger<CombinationRuleProvider>.Instance);
 
         [Fact]
         public void GetCombination_WhenPerfectPair_ReturnsPerfect()
         {
-            Combination combination = combinationRuleProvider.GetCombination(
+            Combination combination = _combinationRuleProvider.GetCombination(
                 BowlingType.Fast,
                 BattingType.PullShot
             );
@@ -22,7 +22,7 @@ namespace CricSummit.Tests.Domain.Services
         [Fact]
         public void GetCombination_WhenGoodPair_ReturnsGood()
         {
-            Combination combination = combinationRuleProvider.GetCombination(
+            Combination combination = _combinationRuleProvider.GetCombination(
                 BowlingType.Yorker,
                 BattingType.DefensiveBlock
             );
@@ -32,7 +32,7 @@ namespace CricSummit.Tests.Domain.Services
         [Fact]
         public void GetCombination_WhenAverageCombination_ReturnsAverage()
         {
-            Combination combination = combinationRuleProvider.GetCombination(
+            Combination combination = _combinationRuleProvider.GetCombination(
                 BowlingType.Fast,
                 BattingType.PaddleShot
             );
@@ -42,7 +42,7 @@ namespace CricSummit.Tests.Domain.Services
         [Fact]
         public void GetCombination_WhenPoorCombination_ReturnsPoor()
         {
-            Combination combination = combinationRuleProvider.GetCombination(
+            Combination combination = _combinationRuleProvider.GetCombination(
                 BowlingType.OffSpin,
                 BattingType.PullShot
             );
@@ -53,7 +53,7 @@ namespace CricSummit.Tests.Domain.Services
         public void GetCombination_InvalidRule_ThrowsException()
         {
             Assert.Throws<InvalidDataException>(
-                () => combinationRuleProvider.GetCombination((BowlingType)99, (BattingType)99)
+                () => _combinationRuleProvider.GetCombination((BowlingType)99, (BattingType)99)
             );
         }
 
@@ -63,7 +63,7 @@ namespace CricSummit.Tests.Domain.Services
             int BowlingTypesCount = Enum.GetValues(typeof(BowlingType)).Length;
             int BattingTypesCount = Enum.GetValues(typeof(BattingType)).Length;
             int combinationCount = 0;
-            foreach (var bowlingRule in combinationRuleProvider.CombinationRules)
+            foreach (var bowlingRule in _combinationRuleProvider.CombinationRules)
             {
                 combinationCount += bowlingRule.Value.Count;
             }

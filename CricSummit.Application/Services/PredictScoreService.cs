@@ -5,14 +5,14 @@ using Microsoft.Extensions.Logging;
 
 namespace CricSummit.Application.Services
 {
-    public class PredictScore : IPredictScore
+    public class PredictScoreService : IPredictScoreService
     {
-        private ILogger<PredictScore> _logger;
+        private ILogger<PredictScoreService> _logger;
         private ICombinationRuleProvider _combinationRuleProvider;
         private IScoreRuleProvider _scoreRuleProvider;
 
-        public PredictScore(
-            ILogger<PredictScore> logger,
+        public PredictScoreService(
+            ILogger<PredictScoreService> logger,
             ICombinationRuleProvider combinationRuleProvider,
             IScoreRuleProvider scoreRuleProvider
         )
@@ -42,10 +42,10 @@ namespace CricSummit.Application.Services
                 );
                 return _scoreRuleProvider.GetScore(shotTiming, combination);
             }
-            catch (InvalidDataException ex)
+            catch (ArgumentException ex)
             {
                 _logger.LogInformation("Failed to evaluate the score");
-                throw new InvalidDataException($"Unable to evaluate the score,{ex}");
+                throw new ArgumentException($"Unable to evaluate the score,{ex}");
             }
         }
     }

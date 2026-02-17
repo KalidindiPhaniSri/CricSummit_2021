@@ -2,7 +2,7 @@ using CricSummit.Domain.ValueObjects;
 
 namespace CricSummit.Application.Interfaces
 {
-    public interface IPredictScore
+    public interface IPredictScoreService
     {
         Score EvaluateScore(
             BowlingType bowlingType,
