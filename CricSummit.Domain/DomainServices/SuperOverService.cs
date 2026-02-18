@@ -24,19 +24,19 @@ namespace CricSummit.Domain.DomainServices
             return over;
         }
 
-        public BowlingType GenerateBowler(List<BowlingType> bowlings)
+        public string GenerateBowler(List<string> bowlers)
         {
-            if (bowlings == null || bowlings.Count == 0)
+            if (bowlers == null || bowlers.Count == 0)
             {
                 _logger.LogWarning("Super over bowlers list cannot be null or empty");
                 throw new ArgumentException("Bowlers list cannot be null or empty");
             }
             _logger.LogInformation("Generated super over selected bowler ");
 
-            return bowlings[_random.Next(bowlings.Count)];
+            return bowlers[_random.Next(bowlers.Count)];
         }
 
-        public List<BattingType> GenerateBatters(List<BattingType> batters)
+        public List<string> GenerateBatters(List<string> batters)
         {
             if (batters == null || batters.Count == 0)
             {
@@ -51,7 +51,7 @@ namespace CricSummit.Domain.DomainServices
 
         public int GenerateTarget()
         {
-            int target = _random.Next(15, 21);
+            int target = _random.Next(15, 22);
             _logger.LogInformation("Generated super over target {target}", target);
             return target;
         }

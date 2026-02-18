@@ -26,5 +26,78 @@ namespace CricSummit.Tests.Domain.Services
                 Assert.False(!Enum.IsDefined(typeof(BowlingType), bowl));
             }
         }
+
+        [Fact]
+        public void GenerateBowler_WhenValidBowlersList_RetursBowler()
+        {
+            List<string> bowlers = new List<string> { "Phani", "Sri", "Lakshmi" };
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            string selectedBowler = superOverService.GenerateBowler(bowlers);
+            Assert.Contains(selectedBowler, bowlers);
+        }
+
+        [Fact]
+        public void Generate_Bowler_WhenInvalidBowlersList_ThrowsError()
+        {
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            Assert.Throws<ArgumentException>(() => superOverService.GenerateBowler([ ]));
+        }
+
+        [Fact]
+        public void GenerateBatters_WhenValidBattersList_ReturnsThreeBattersLlist()
+        {
+            List<string> batters = new List<string>
+            {
+                "David",
+                "John",
+                "Michael",
+                "Luci",
+                "Thomas"
+            };
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            List<string> selectedBatters = superOverService.GenerateBatters(batters);
+            Assert.Equal(3, selectedBatters.Count);
+            Assert.All(selectedBatters, item => Assert.Contains(item, batters));
+        }
+
+        [Fact]
+        public void GenerateTarget_ReturnsValidTargetScore()
+        {
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            int targetScore = superOverService.GenerateTarget();
+            Assert.InRange(targetScore, 15, 21);
+        }
+
+        [Fact]
+        public void IsInningsOver_ReturnsFalse()
+        {
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            bool over = superOverService.IsInningsOver(1);
+            Assert.False(over);
+        }
+
+        [Fact]
+        public void IsInningsOver_ReturnsTrue()
+        {
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            bool over = superOverService.IsInningsOver(2);
+            Assert.True(over);
+        }
+
+        [Fact]
+        public void IsTargetChased_WhenScoreLessThanTarget_ReturnsFalse()
+        {
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            bool chased = superOverService.IsTargetChased(16, 21);
+            Assert.False(chased);
+        }
+
+        [Fact]
+        public void IsTargetChased_WhenScoreEqualToTarget_ReturnsTrue()
+        {
+            ISuperOverService superOverService = new SuperOverService(_logger);
+            bool chased = superOverService.IsTargetChased(21, 21);
+            Assert.True(chased);
+        }
     }
 }
