@@ -30,34 +30,18 @@ namespace CricSummit.Tests.Domain.Services
         [Fact]
         public void GenerateBowler_WhenValidBowlersList_RetursBowler()
         {
-            List<string> bowlers = new List<string> { "Phani", "Sri", "Lakshmi" };
             ISuperOverService superOverService = new SuperOverService(_logger);
-            string selectedBowler = superOverService.GenerateBowler(bowlers);
-            Assert.Contains(selectedBowler, bowlers);
-        }
-
-        [Fact]
-        public void Generate_Bowler_WhenInvalidBowlersList_ThrowsError()
-        {
-            ISuperOverService superOverService = new SuperOverService(_logger);
-            Assert.Throws<ArgumentException>(() => superOverService.GenerateBowler([ ]));
+            string selectedBowler = superOverService.GenerateBowler();
+            Assert.NotEmpty(selectedBowler);
         }
 
         [Fact]
         public void GenerateBatters_WhenValidBattersList_ReturnsThreeBattersLlist()
         {
-            List<string> batters = new List<string>
-            {
-                "David",
-                "John",
-                "Michael",
-                "Luci",
-                "Thomas"
-            };
             ISuperOverService superOverService = new SuperOverService(_logger);
-            List<string> selectedBatters = superOverService.GenerateBatters(batters);
+            List<string> selectedBatters = superOverService.GenerateBatters();
             Assert.Equal(3, selectedBatters.Count);
-            Assert.All(selectedBatters, item => Assert.Contains(item, batters));
+            Assert.All(selectedBatters, item => Assert.NotEmpty(item));
         }
 
         [Fact]

@@ -24,26 +24,43 @@ namespace CricSummit.Domain.DomainServices
             return over;
         }
 
-        public string GenerateBowler(List<string> bowlers)
+        public string GenerateBowler()
         {
-            if (bowlers == null || bowlers.Count == 0)
-            {
-                _logger.LogWarning("Super over bowlers list cannot be null or empty");
-                throw new ArgumentException("Bowlers list cannot be null or empty");
-            }
+            List<string> bowlers =
+            [
+                "James",
+                "William",
+                "Oliver",
+                "Henry",
+                "Thomas",
+                "George",
+                "Edward",
+                "Charles",
+                "Arthur",
+                "Harry"
+            ];
+
             _logger.LogInformation("Generated super over selected bowler ");
 
             return bowlers[_random.Next(bowlers.Count)];
         }
 
-        public List<string> GenerateBatters(List<string> batters)
+        public List<string> GenerateBatters()
         {
-            if (batters == null || batters.Count == 0)
-            {
-                _logger.LogWarning("Super over batting list cannot be null or empty");
+            List<string> batters =
+            [
+                "Jack",
+                "Samuel",
+                "Daniel",
+                "Joseph",
+                "Benjamin",
+                "Alexander",
+                "Leo",
+                "Oscar",
+                "Jacob",
+                "Frederick"
+            ];
 
-                throw new ArgumentException("Batters list cannot be null or empty");
-            }
             _logger.LogInformation("Generated super over batters participant list");
             // orderby is assigning each key with a _random number and sort it with the key
             return batters.OrderBy(_ => _random.Next()).Take(3).ToList();
@@ -51,7 +68,7 @@ namespace CricSummit.Domain.DomainServices
 
         public int GenerateTarget()
         {
-            int target = _random.Next(15, 22);
+            int target = _random.Next(15, 21);
             _logger.LogInformation("Generated super over target {target}", target);
             return target;
         }
