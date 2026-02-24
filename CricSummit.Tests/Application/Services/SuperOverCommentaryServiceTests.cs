@@ -5,6 +5,7 @@ using CricSummit.Domain.DomainServices;
 using CricSummit.Domain.ValueObjects;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
+using NSubstitute.Core;
 
 namespace CricSummit.Tests.Application.Services
 {
@@ -44,10 +45,18 @@ namespace CricSummit.Tests.Application.Services
         {
             _superOverService.GenerateBowler().Returns("Ani");
             _superOverService.GenerateBatters().Returns([ "A", "B", "C" ]);
-            _superOverService.GenerateTarget().Returns(18);
+            _superOverService.GenerateTarget().Returns(19);
             _superOverService
                 .GenerateBowlingTypes()
                 .Returns([ .. Enumerable.Range(0, 6).Select(_ => BowlingType.Fast) ]);
+            _superOverService
+                .IsTargetChased(Arg.Any<int>(), Arg.Any<int>())
+                .Returns(callInfo =>
+                {
+                    int score = callInfo.ArgAt<int>(0);
+                    int target = callInfo.ArgAt<int>(1);
+                    return score >= target;
+                });
         }
 
         [Fact]
@@ -69,9 +78,10 @@ namespace CricSummit.Tests.Application.Services
                     Arg.Any<ShotTiming>()
                 )
                 .Returns(new ScoreCommentaryDto { Score = Score.Four, Commentary = "Great Shot" });
+
             var result = _superOverCommentaryService.PlaySuperOver(_requestData);
+            Assert.True(result.FinalScore >= 19);
             Assert.Equal(MatchResult.Won, result.ResultMessage);
-            Assert.True(result.FinalScore > 18);
         }
 
         [Fact]
@@ -111,7 +121,7 @@ namespace CricSummit.Tests.Application.Services
         }
 
         [Fact]
-        public void PlaySuperOver_ScoreEqualsTarget_ReturnsTie()
+        public void PlaySuperOver_ScoreEqualsTargetMinusOne_ReturnsTie()
         {
             _scoreCommentaryService
                 .GetScoreAndCommentary(

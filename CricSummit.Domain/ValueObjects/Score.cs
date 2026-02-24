@@ -32,5 +32,10 @@ namespace CricSummit.Domain.ValueObjects
         {
             return Score.Wicket == score;
         }
+
+        public static string Runs(this Score score)
+        {
+            return IsWicket(score) ? "Wicket" : ToRuns(score) + " runs";
+        }
     }
 }

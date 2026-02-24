@@ -71,7 +71,7 @@ namespace CricSummit.Application.Services
             {
                 match.Wickets++;
                 if (match.Wickets < 2)
-                    match.Striker = match.Batters[match.Wickets];
+                    match.Striker = match.Batters[2];
 
                 return;
             }
@@ -117,8 +117,8 @@ namespace CricSummit.Application.Services
                 input.ShotTiming
             );
             int? runs = ScoreExtensions.ToRuns(score);
-            UpdateMatchState(match, runs, score);
             AddCommentary(match, bowlingType, input, comment, runs);
+            UpdateMatchState(match, runs, score);
             match.BallIndex++;
         }
 
@@ -147,12 +147,13 @@ namespace CricSummit.Application.Services
                 Commentary = match.Commentary,
                 FinalScore = match.Score,
                 ResultMessage = matchResult,
+                ScoreDifference = Math.Abs(match.Score - match.TargetScore)
             };
         }
 
         private SuperOverResultDto BuildFinalResult(SuperOverMatch match)
         {
-            if (match.Score == match.TargetScore)
+            if (match.Score == match.TargetScore - 1)
             {
                 _logger.LogInformation(
                     "Match tied again with score : {score} target score : {target}",
