@@ -11,6 +11,13 @@ namespace CricSummit.Console.Challenges
         private readonly IInputProvider _inputProvider;
         private readonly IPredictScoreService _predictScoreService;
 
+        private class InputEnum
+        {
+            public BowlingType Bowl { get; set; }
+            public BattingType Bat { get; set; }
+            public ShotTiming Timing { get; set; }
+        }
+
         public PredictOutcomeHandler(
             ILogger<PredictOutcomeHandler> logger,
             IInputProvider inputProvider,
@@ -25,41 +32,71 @@ namespace CricSummit.Console.Challenges
         public void Execute()
         {
             _logger.LogInformation("Start predicting the score");
-
             System.Console.WriteLine("\n Format");
             System.Console.WriteLine("BowlingType_BattingType_ShotTiming");
             System.Console.WriteLine("\n Example");
             System.Console.WriteLine("Fast_PullShot_Perfect \n");
-            var input = _inputProvider.ReadAll();
-            if (input == null || !input.Any())
+            while (true)
             {
-                _logger.LogWarning("Input should not be empty");
-                throw new InvalidOperationException("Input should not be empty");
-            }
-
-            foreach (string[] entry in input)
-            {
-                try
+                var input = _inputProvider.ReadAll();
+                if (input == null || !input.Any())
                 {
-                    bool validBowlType = Enum.TryParse(entry[0], true, out BowlingType bowl);
-                    bool validBatType = Enum.TryParse(entry[1], true, out BattingType bat);
-                    bool validTimingType = Enum.TryParse(entry[2], true, out ShotTiming timing);
-                    Score score = _predictScoreService.EvaluateScore(bowl, bat, timing);
+                    System.Console.WriteLine("Invalid input. Please try again");
+                    continue;
+                }
+                bool isValid = true;
+                List<InputEnum> enums =  [ ];
+                foreach (string[] entry in input)
+                {
+                    if (entry == null || entry.Length < 3)
+                    {
+                        System
+                            .Console
+                            .WriteLine($"Invalid format: {string.Join(" ,", entry ?? [ ])}");
+                        isValid = false;
+                        break;
+                    }
+                    if (
+                        !Enum.TryParse(entry[0], true, out BowlingType bowl)
+                        || !Enum.TryParse(entry[1], true, out BattingType bat)
+                        || !Enum.TryParse(entry[2], true, out ShotTiming timing)
+                    )
+                    {
+                        System.Console.WriteLine("Invalid input. Please try again");
+
+                        _logger.LogWarning(
+                            "Invalid input row skipped: {row}",
+                            string.Join(",", entry)
+                        );
+                        isValid = false;
+
+                        break;
+                    }
+                    enums.Add(
+                        new InputEnum
+                        {
+                            Bat = bat,
+                            Bowl = bowl,
+                            Timing = timing
+                        }
+                    );
+                }
+                if (!isValid)
+                    continue;
+                foreach (InputEnum inp in enums)
+                {
+                    Score score = _predictScoreService.EvaluateScore(inp.Bowl, inp.Bat, inp.Timing);
                     string runs = ScoreExtensions.Runs(score);
                     _logger.LogInformation(
                         "Score for the given bowling type : {bowl} batting type : {bat} shot timing : {timing} is {runs}",
-                        bowl,
-                        bat,
-                        timing,
+                        inp.Bowl,
+                        inp.Bat,
+                        inp.Timing,
                         runs
                     );
                     System.Console.WriteLine($"\n {runs}");
                 }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    _logger.LogWarning(ex, "Failed to process");
-                    throw;
-                }
+                break;
             }
         }
     }

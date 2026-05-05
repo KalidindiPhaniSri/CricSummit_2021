@@ -36,7 +36,7 @@ namespace CricSummit.Console
                     System.Console.WriteLine("2. Commentary");
                     System.Console.WriteLine("3. Super Over\n");
                 }
-                var choice = _inputProvider.ReadLine();
+                var choice = _inputProvider.ReadLine().Trim();
                 switch (choice)
                 {
                     case "1":
