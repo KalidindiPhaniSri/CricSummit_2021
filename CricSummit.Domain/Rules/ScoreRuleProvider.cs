@@ -91,7 +91,9 @@ namespace CricSummit.Domain.Rules
                 shotTiming,
                 combination
             );
-            throw new InvalidDataException($"Score not found for {shotTiming} and {combination}");
+            throw new InvalidOperationException(
+                $"Score not found for {shotTiming} and {combination}"
+            );
         }
 
         // private Score AssignScore(ShotTiming shotTiming, Combination combination)

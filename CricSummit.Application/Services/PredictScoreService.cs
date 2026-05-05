@@ -42,10 +42,10 @@ namespace CricSummit.Application.Services
                 );
                 return _scoreRuleProvider.GetScore(shotTiming, combination);
             }
-            catch (ArgumentException ex)
+            catch (InvalidOperationException ex)
             {
                 _logger.LogInformation("Failed to evaluate the score");
-                throw new ArgumentException($"Unable to evaluate the score,{ex}");
+                throw new InvalidOperationException($"Unable to evaluate the score,{ex}");
             }
         }
     }

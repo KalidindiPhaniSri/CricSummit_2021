@@ -169,7 +169,9 @@ namespace CricSummit.Domain.Rules
                 bowlingType,
                 battingType
             );
-            throw new InvalidDataException();
+            throw new InvalidOperationException(
+                $"Combination not found for the given {bowlingType} and {battingType}"
+            );
         }
     }
 }
