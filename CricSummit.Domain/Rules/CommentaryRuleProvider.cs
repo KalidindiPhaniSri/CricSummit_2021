@@ -75,7 +75,7 @@ namespace CricSummit.Domain.Rules
                 return commentaryVals;
             }
             _logger.LogWarning("Commentary not found for given score {score}", score);
-            throw new KeyNotFoundException("Invalid score");
+            throw new InvalidOperationException("Invalid score");
         }
     }
 }

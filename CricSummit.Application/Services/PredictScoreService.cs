@@ -42,6 +42,7 @@ namespace CricSummit.Application.Services
                 );
                 return _scoreRuleProvider.GetScore(shotTiming, combination);
             }
+            //we didn't configure the rules properly. user is giving valid data.
             catch (InvalidOperationException ex)
             {
                 _logger.LogInformation("Failed to evaluate the score");

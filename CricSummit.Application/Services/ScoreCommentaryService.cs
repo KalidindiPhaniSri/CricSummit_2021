@@ -37,6 +37,7 @@ namespace CricSummit.Application.Services
             );
             try
             {
+                //EvaluateScore and GetCommentary may throw error
                 Score score = _predictScoreService.EvaluateScore(
                     bowlingType,
                     battingType,
@@ -52,10 +53,13 @@ namespace CricSummit.Application.Services
                 }
                 return new ScoreCommentaryDto { Score = score, Commentary = selectedCommentary };
             }
-            catch (ArgumentException ex)
+            //we didn't configure the rules properly. user is giving valid data.
+            catch (InvalidOperationException ex)
             {
                 _logger.LogInformation("Failed to evaluate the score and commentary");
-                throw new ArgumentException($"Unable to evaluate the score and commentary,{ex}");
+                throw new InvalidOperationException(
+                    $"Unable to evaluate the score and commentary,{ex}"
+                );
             }
         }
     }
